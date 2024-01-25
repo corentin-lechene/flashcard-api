@@ -1,4 +1,4 @@
-import {CardRepository} from "../../domain/contracts/card-repository.interface";
+import {CardRepository} from "../../domain/repositories/card-repository.interface";
 import {Card} from "../../domain/models";
 import {CardService} from "./card.service";
 
@@ -13,5 +13,4 @@ export class CardServiceImpl implements CardService {
         this.cardRepository.fetchCardById(1);
         return []
     }
-
 }
