@@ -1,18 +1,17 @@
-import {CardId, Category} from "./index";
-
+import {CardId, Category, generateCardId} from "./index";
 
 export class Card {
     readonly id: CardId;
+    category: Category
     question: string;
     answer: string
-    category: Category
     tag: string;
 
-    constructor(id: CardId, question: string, answer: string, category: Category, tag: string) {
-        this.id = id;
+    constructor(question: string, answer: string, category: Category, tag: string) {
+        this.id = generateCardId();
+        this.category = category;
         this.question = question;
         this.answer = answer;
-        this.category = category;
         this.tag = tag;
     }
 }

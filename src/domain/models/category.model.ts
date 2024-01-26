@@ -1,10 +1,10 @@
 export enum Category {
-    FIRST,
-    SECOND,
-    THIRD,
-    FOURTH,
-    FIFTH,
-    SIXTH,
-    SEVENTH,
-    DONE
+    FIRST = "FIRST",
+    SECOND = "SECOND",
+    THIRD = "THIRD",
+    FOURTH = "FOURTH",
+    FIFTH = "FIFTH",
+    SIXTH = "SIXTH",
+    SEVENTH = "SEVENTH",
+    DONE = "DONE"
 }

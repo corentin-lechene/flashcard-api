@@ -4,14 +4,25 @@ import {Card, CardId, Category} from "../../domain/models";
 const _cards: Card[] = []
 
 export class InMemoryCardRepository implements CardRepository {
+    //init
+    constructor() {
+        const newCard = new Card(
+            "question",
+            "answer",
+            Category.FIRST,
+            "tag"
+        )
+        _cards.push(newCard);
+    }
     async fetchCardById(id: CardId): Promise<Card> {
         //todo
+
         throw new Error("not implemented");
     }
 
     async createCard(card: Card): Promise<Card> {
-        //todo
-        throw new Error("not implemented");
+        _cards.push(card);
+        return card;
     }
 
     async delete(cardId: CardId): Promise<void> {
@@ -20,14 +31,6 @@ export class InMemoryCardRepository implements CardRepository {
     }
 
     async fetchCards(): Promise<Card[]> {
-        const newCard = new Card(
-            "id",
-            "question",
-            "answer",
-            Category.FIRST,
-            "tag"
-        )
-        _cards.push(newCard);
         return _cards;
     }
 
