@@ -1,5 +1,5 @@
 import {CardRepository} from "../../domain/repositories/card-repository.interface";
-import {Card, Category} from "../../domain/models";
+import {Card, CardId, Category} from "../../domain/models";
 import {CardService} from "./card.service";
 
 export class CardServiceImpl implements CardService {
@@ -15,7 +15,9 @@ export class CardServiceImpl implements CardService {
         return this.cardRepository.fetchCards();
     }
 
-    async updateCardCategory(cardId: string, category: Category): Promise<void> {
+    async updateCardCategory(cardId: CardId, category: Category): Promise<void> {
+        if(!cardId) throw new Error("cardId is required"); // todo create custom error
+        if(!category) throw new Error("category is required");
         await this.cardRepository.updateCardCategory(cardId, category);
     }
 }

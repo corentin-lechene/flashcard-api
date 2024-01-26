@@ -40,6 +40,9 @@ export class InMemoryCardRepository implements CardRepository {
     }
 
     async updateCardCategory(cardId: CardId, category: Category): Promise<void> {
+        if (!cardId) throw new Error("cardId is required"); // todo create custom error
+        if (!category) throw new Error("category is required");
+
         const card = _cards.find(card => card.id === cardId);
         if (!card) {
             throw new Error("card not found");
