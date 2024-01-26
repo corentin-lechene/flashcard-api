@@ -1,35 +1,47 @@
 import {CardRepository} from "../../domain/repositories/card-repository.interface";
-import {Card} from "../../domain/models";
-import {CardId} from "../../domain/models/cardId.model";
-import {Category} from "../../domain/models/category.model";
+import {Card, CardId, Category} from "../../domain/models";
+
+const _cards: Card[] = []
 
 export class InMemoryCardRepository implements CardRepository {
-    fetchCardById(id: number): Card {
-        //gérer les exceptions
-        return new Card();
+    async fetchCardById(id: CardId): Promise<Card> {
+        //todo
+        throw new Error("not implemented");
     }
 
-    createCard(card: Card): Card {
-        // throw new Error("not implemented");
-        return new Card();
+    async createCard(card: Card): Promise<Card> {
+        //todo
+        throw new Error("not implemented");
     }
 
-    delete(cardId: CardId): void {
+    async delete(cardId: CardId): Promise<void> {
+        //todo
+        throw new Error("not implemented");
     }
 
-    fetchCards(): Card[] {
+    async fetchCards(): Promise<Card[]> {
+        const newCard = new Card(
+            "id",
+            "question",
+            "answer",
+            Category.FIRST,
+            "tag"
+        )
+        _cards.push(newCard);
+        return _cards;
+    }
+
+    async fetchCardsBySpecificDate(date: Date): Promise<Card[]> {
         return [];
     }
 
-    fetchCardsBySpecificDate(date: Date): Card[] {
+    async fetchCardsByTags(tags: String[]): Promise<Card[]> {
         return [];
     }
 
-    fetchCardsByTags(tags: String[]): Card[] {
-        return [];
-    }
-
-    updateCardCategory(cardId: CardId, category: Category): void {
+    async updateCardCategory(cardId: CardId, category: Category): Promise<void> {
+        //todo
+        throw new Error("not implemented");
     }
 
 }

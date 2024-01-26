@@ -1,19 +1,17 @@
-import {Card} from "../models";
-import {CardId} from "../models/cardId.model";
-import {Category} from "../models/category.model";
+import {Card, CardId, Category} from "../models";
 
 export interface CardRepository {
-    fetchCardById(id: number): Card;
+    fetchCardById(id: CardId): Promise<Card>;
 
-    fetchCards(): Card[];
+    fetchCards(): Promise<Card[]>;
 
-    fetchCardsByTags(tags: String[]): Card[];
+    fetchCardsByTags(tags: String[]): Promise<Card[]>;
 
-    createCard(card: Card): Card;
+    createCard(card: Card): Promise<Card>;
 
-    delete(cardId: CardId): void;
+    delete(cardId: CardId): Promise<void>;
 
-    fetchCardsBySpecificDate(date: Date): Card[];
+    fetchCardsBySpecificDate(date: Date): Promise<Card[]>;
 
-    updateCardCategory(cardId: CardId, category: Category): void;
+    updateCardCategory(cardId: CardId, category: Category): Promise<void>;
 }

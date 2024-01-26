@@ -1,7 +1,7 @@
-import * as express from "express";
-
-const router = express.Router();
-
-router.get("/users");
-
-module.exports = router;
+// import * as express from "express";
+//
+// const router = express.Router();
+//
+// router.get("/users");
+//
+// module.exports = router;

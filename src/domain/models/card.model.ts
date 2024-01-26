@@ -1,5 +1,4 @@
-import {CardId} from "./cardId.model";
-import {Category} from "./category.model";
+import {CardId, Category} from "./index";
 
 
 export class Card {
@@ -8,4 +7,12 @@ export class Card {
     answer: string
     category: Category
     tag: string;
+
+    constructor(id: CardId, question: string, answer: string, category: Category, tag: string) {
+        this.id = id;
+        this.question = question;
+        this.answer = answer;
+        this.category = category;
+        this.tag = tag;
+    }
 }

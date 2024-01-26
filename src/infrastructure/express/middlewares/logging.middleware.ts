@@ -1,6 +1,6 @@
-import {RequestHandler, Request, Response} from "express";
+import {Request, RequestHandler, Response} from "express";
 import * as dayjs from "dayjs";
-import {LoggerService, ConsoleLogger} from "../../../common";
+import {ConsoleLogger, LoggerService} from "../../../common";
 
 export function loggingMiddleware(): RequestHandler {
     return (req, res, next) => {

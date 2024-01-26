@@ -1,13 +1,14 @@
 import {CardService} from "../../../application/services/card.service";
-import {Card} from "../../../domain/models";
+import {RequestHandler} from "express";
 
 export class CardController {
-    private cardService: CardService;
-    constructor(cardService: CardService) {
+    constructor(private cardService: CardService) {
         this.cardService = cardService;
     }
 
-    async fetchCardOfTheDay(){
-        this.cardService.fetchCardOfTheDay();
+    async fetchCards(): Promise<RequestHandler> {
+        return async (_, res) => {
+            res.send(await this.cardService.fetchCards());
+        }
     }
 }

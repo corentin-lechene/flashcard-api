@@ -3,14 +3,15 @@ import {Card} from "../../domain/models";
 import {CardService} from "./card.service";
 
 export class CardServiceImpl implements CardService {
-    private cardRepository: CardRepository
-
-    constructor(cardRepository: CardRepository) {
+    constructor(private cardRepository: CardRepository) {
         this.cardRepository = cardRepository;
     }
 
-    fetchCardOfTheDay(): Card[] {
-        this.cardRepository.fetchCardById(1);
+    async fetchCardOfTheDay(): Promise<Card[]> {
         return []
+    }
+
+    async fetchCards(): Promise<Card[]> {
+        return this.cardRepository.fetchCards();
     }
 }
