@@ -40,8 +40,12 @@ export class InMemoryCardRepository implements CardRepository {
     }
 
     async updateCardCategory(cardId: CardId, category: Category): Promise<void> {
-        //todo
-        throw new Error("not implemented");
+        const card = _cards.find(card => card.id === cardId);
+        if (!card) {
+            throw new Error("card not found");
+        }
+        card.category = category;
+        await Promise.resolve();
     }
 
 }
