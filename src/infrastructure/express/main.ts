@@ -13,6 +13,7 @@ export async function start_express() {
 
     app.use(cors());
     app.use(cors({ origin: ['http://localhost:5173'] }));
+    app.use(express.json());
 
     // logs
     app.use(loggingMiddleware());
@@ -23,7 +24,7 @@ export async function start_express() {
     // all routes
     const cardController = new CardController(cardService);
     app.get("/cards", await cardController.fetchCards());
-    //todo ajouter ici pour le moment
+    app.patch("/cards/:cardId/answer", await cardController.updateCardAnswer());
 
     // populate for dev
 

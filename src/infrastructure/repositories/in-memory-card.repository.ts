@@ -1,12 +1,22 @@
 import {CardRepository} from "../../domain/repositories/card-repository.interface";
 import {Card, CardId, Category} from "../../domain/models";
 
-const _cards: Card[] = []
+const _cards: Card[] = [new Card(
+    "id",
+    "question",
+    "answer",
+    Category.FIRST,
+    "tag"
+)]
 
 export class InMemoryCardRepository implements CardRepository {
     async fetchCardById(id: CardId): Promise<Card> {
-        //todo
-        throw new Error("not implemented");
+        if (!id) throw new Error("cardId is required"); // todo create custom error
+        const card = _cards.find(card => card.id === id);
+        if (!card) {
+            throw new Error("card not found");
+        }
+        return card;
     }
 
     async createCard(card: Card): Promise<Card> {
@@ -39,15 +49,12 @@ export class InMemoryCardRepository implements CardRepository {
         return [];
     }
 
-    async updateCardCategory(cardId: CardId, category: Category): Promise<void> {
-        if (!cardId) throw new Error("cardId is required"); // todo create custom error
-        if (!category) throw new Error("category is required");
-
-        const card = _cards.find(card => card.id === cardId);
-        if (!card) {
+    async updateCard(card: Card): Promise<void> {
+        const index = _cards.findIndex(_card => _card.id === card.id);
+        if (index === -1) {
             throw new Error("card not found");
         }
-        card.category = category;
+        _cards[index] = card;
         await Promise.resolve();
     }
 

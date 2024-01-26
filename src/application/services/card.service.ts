@@ -1,7 +1,8 @@
-import {Card, Category} from "../../domain/models";
+import {Card, CardId, Category} from "../../domain/models";
 
 export interface CardService {
     fetchCardOfTheDay(): Promise<Card[]>;
     fetchCards(): Promise<Card[]>;
-    updateCardCategory(cardId: string, category: Category): Promise<void>;
+    fetchCardById(cardId: CardId): Promise<Card>;
+    incrementCardCategory(cardId: CardId): Promise<void>;
 }
