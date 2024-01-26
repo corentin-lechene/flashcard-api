@@ -7,7 +7,7 @@
     "dev": "nodemon -e ts --exec \"npm run build && npm run start\"",
     "start": "node dist/bin/server.js",
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --config=./config/jest.config.ts"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +30,7 @@
     "@types/jsonwebtoken": "^9.0.5",
     "@types/node": "^20.11.5",
     "nodemon": "^3.0.3",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "ts-jest": "^29.1.2"
   }
 }
