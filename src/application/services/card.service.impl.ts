@@ -13,8 +13,12 @@ export class CardServiceImpl implements CardService {
         return []
     }
 
-    async fetchCards(): Promise<Card[]> {
-        return this.cardRepository.fetchCards();
+    async fetchCards(tags?:string[]): Promise<Card[]> {
+        if(tags) {
+            return await this.cardRepository.fetchCardsByTags(tags);
+        } else {
+            return this.cardRepository.fetchCards();
+        }
     }
 
     async createCard(cardUserData: CardUserData): Promise<Card> {

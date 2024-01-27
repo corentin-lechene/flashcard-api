@@ -9,8 +9,30 @@ export class CardController {
     }
 
     async fetchCards(): Promise<RequestHandler> {
-        return async (_, res) => {
-            res.send(await this.cardService.fetchCards());
+        return async (req: Request, res: Response) => {
+            try {
+                if(req.query.tags) {
+                    const tags = req.query.tags as string[];
+                    const cardsMatchingTags = await this.cardService.fetchCards(tags);
+                    res.status(200);
+
+                    if(cardsMatchingTags.length == 0) {
+                        res.statusMessage = StatusMessage.CARDS_NOT_FOUND;
+                    } else {
+                        res.statusMessage = StatusMessage.FOUND_CARDS_BY_TAG_QUERY;
+                    }
+
+                    res.send(cardsMatchingTags);
+
+                } else {
+                    const allCards = await this.cardService.fetchCards();
+                    res.send(allCards);
+                }
+
+            } catch (e) {
+                res.status(400).send();
+            }
+
         }
     }
 
