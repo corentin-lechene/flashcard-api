@@ -28,7 +28,7 @@ export function checkCardBody(): RequestHandler {
         const answer = req.body["answer"];
         const tag = req.body["tag"];
 
-        req.cardUserData = new CardUserData(question, answer, tag)
+        req.cardUserData = new CardUserData(question, answer, tag);
         next();
     }
 }

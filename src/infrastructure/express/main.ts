@@ -3,7 +3,7 @@ import * as cors from 'cors';
 
 import {loggingMiddleware, undefinedMiddleware} from "./middlewares/logging.middleware";
 
-import {CardController} from "./controllers/card-controller"; //fixme
+import {CardController} from "./controllers/card.controller"; //fixme
 import {cardService} from "../../application.configuration";
 import {checkCardBody} from "./middlewares/card.middleware"; //fixme
 

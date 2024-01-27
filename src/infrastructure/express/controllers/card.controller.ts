@@ -21,7 +21,7 @@ export class CardController {
                 const cardAdded = await this.cardService.createCard(cardUserData);
 
                 res.status(201).statusMessage = StatusMessage.CREATED_CARD;
-                res.status(201).json(cardAdded).end();
+                res.json(cardAdded).end();
             } catch (e) {
                 res.status(400).end();
             }
