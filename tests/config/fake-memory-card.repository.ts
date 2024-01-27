@@ -1,9 +1,10 @@
-import {CardRepository} from "../../domain/repositories/card-repository.interface";
-import {Card, CardId, Category} from "../../domain/models";
+import {Card, CardId, Category} from "../../src/domain/models";
+import {CardRepository} from "../../src/domain/repositories/card-repository.interface";
+
 
 const _cards: Card[] = []
 
-export class InMemoryCardRepository implements CardRepository {
+export class FakeMemoryCardRepository implements CardRepository {
     //init
     constructor() {
         const newCard = new Card(
