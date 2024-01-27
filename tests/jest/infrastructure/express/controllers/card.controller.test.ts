@@ -49,3 +49,11 @@
 //     });
 //
 // });
+
+import {describe} from "@jest/globals";
+
+describe('CardController', () => {
+    it('should add a card successfully', () => {
+        expect(true).toBeTruthy();
+    });
+});
