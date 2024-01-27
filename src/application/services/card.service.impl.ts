@@ -1,7 +1,6 @@
 import {CardRepository} from "../../domain/repositories/card-repository.interface";
 import {Card, CardId, Category} from "../../domain/models";
 import {CardService} from "./card.service";
-import {cardRepository} from "../../application.configuration";
 
 export class CardServiceImpl implements CardService {
     constructor(private cardRepository: CardRepository) {
@@ -26,6 +25,14 @@ export class CardServiceImpl implements CardService {
         if(card.category === Category.DONE) return Promise.resolve();
 
         card.category = card.category + 1;
+
+        await this.cardRepository.updateCard(card);
+        return Promise.resolve();
+    }
+
+    async resetCardCategory(cardId: CardId): Promise<void> {
+        const card = await this.cardRepository.fetchCardById(cardId);
+        card.category = Category.FIRST;
 
         await this.cardRepository.updateCard(card);
         return Promise.resolve();

@@ -21,7 +21,11 @@ export class CardController {
             if(!cardId) return res.status(400).send("Bad request");
 
             try {
-                await this.cardService.incrementCardCategory(cardId);
+                if(isValid) {
+                    await this.cardService.incrementCardCategory(cardId);
+                } else {
+                    await this.cardService.resetCardCategory(cardId);
+                }
                 res.status(200).end();
             } catch(e) {
                 console.error(e);
