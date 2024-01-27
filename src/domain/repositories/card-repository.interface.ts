@@ -13,5 +13,5 @@ export interface CardRepository {
 
     fetchCardsBySpecificDate(date: Date): Promise<Card[]>;
 
-    updateCardCategory(cardId: CardId, category: Category): Promise<void>;
+    updateCard(card: Card): Promise<void>;
 }

@@ -3,8 +3,8 @@ import * as cors from 'cors';
 
 import {loggingMiddleware, undefinedMiddleware} from "./middlewares/logging.middleware";
 
-import {CardController} from "./controllers/card.controller"; //fixme
-import {cardService} from "../../application.configuration";
+import {CardController} from "./controllers/card-controller"; //fixme
+import {cardService} from "../../application.configuration"; //fixme
 import {checkCardBody} from "./middlewares/card.middleware"; //fixme
 
 const PORT = process.env.PORT || 8080;
@@ -14,6 +14,7 @@ export async function start_express() {
 
     app.use(cors());
     app.use(cors({ origin: ['http://localhost:5173'] }));
+    app.use(express.json());
 
     // logs
     app.use(loggingMiddleware());
@@ -25,7 +26,7 @@ export async function start_express() {
     const cardController = new CardController(cardService);
     app.get("/cards", await cardController.fetchCards());
     app.post("/cards", express.json(), checkCardBody(), await cardController.addCard());
-    //todo ajouter ici pour le moment
+    app.patch("/cards/:cardId/answer", await cardController.updateCardAnswer());
 
     // populate for dev
 
