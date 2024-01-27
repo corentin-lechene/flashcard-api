@@ -16,9 +16,11 @@ export class FakeMemoryCardRepository implements CardRepository {
         _cards.push(newCard);
     }
     async fetchCardById(id: CardId): Promise<Card> {
-        //todo
-
-        throw new Error("not implemented");
+        const card = _cards.find(card => card.id === id);
+        if (!card) {
+            throw new Error("card not found");
+        }
+        return card;
     }
 
     async createCard(card: Card): Promise<Card> {
@@ -43,9 +45,13 @@ export class FakeMemoryCardRepository implements CardRepository {
         return [];
     }
 
-    async updateCardCategory(cardId: CardId, category: Category): Promise<void> {
-        //todo
-        throw new Error("not implemented");
+    async updateCard(card: Card): Promise<void> {
+        const index = _cards.findIndex(_card => _card.id === card.id);
+        if (index === -1) {
+            throw new Error("card not found");
+        }
+        _cards[index] = card;
+        await Promise.resolve();
     }
 
 }

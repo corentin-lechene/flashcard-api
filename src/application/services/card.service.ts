@@ -1,5 +1,5 @@
 import {Card, CardId} from "../../domain/models";
-import {CardUserData} from "../../infrastructure/express/dto/card-user-data.dto";
+import {CardUserData} from "../dto/card-user-data.dto";
 
 export interface CardService {
     fetchCardOfTheDay(): Promise<Card[]>;

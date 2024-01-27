@@ -1,11 +1,11 @@
-import {Card, CardId, Category} from "../models";
+import {Card, CardId} from "../models";
 
 export interface CardRepository {
     fetchCardById(id: CardId): Promise<Card>;
 
     fetchCards(): Promise<Card[]>;
 
-    fetchCardsByTags(tags: String[]): Promise<Card[]>;
+    fetchCardsByTags(tags: string[]): Promise<Card[]>;
 
     createCard(card: Card): Promise<Card>;
 

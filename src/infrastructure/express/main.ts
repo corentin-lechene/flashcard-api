@@ -3,9 +3,9 @@ import * as cors from 'cors';
 
 import {loggingMiddleware, undefinedMiddleware} from "./middlewares/logging.middleware";
 
-import {CardController} from "./controllers/card-controller"; //fixme
 import {cardService} from "../../application.configuration"; //fixme
-import {checkCardBody} from "./middlewares/card.middleware"; //fixme
+import {checkCardBody} from "./middlewares/card.middleware"; // fixme
+import {CardController} from "./controllers/card.controller"; //fixme
 
 const PORT = process.env.PORT || 8080;
 
@@ -25,7 +25,7 @@ export async function start_express() {
     // all routes
     const cardController = new CardController(cardService);
     app.get("/cards", await cardController.fetchCards());
-    app.post("/cards", express.json(), checkCardBody(), await cardController.addCard());
+    app.post("/cards", checkCardBody(), await cardController.addCard());
     app.patch("/cards/:cardId/answer", await cardController.updateCardAnswer());
 
     // populate for dev

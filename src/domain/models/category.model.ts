@@ -1,10 +1,10 @@
 export enum Category {
-    FIRST = "FIRST",
-    SECOND = "SECOND",
-    THIRD = "THIRD",
-    FOURTH = "FOURTH",
-    FIFTH = "FIFTH",
-    SIXTH = "SIXTH",
-    SEVENTH = "SEVENTH",
-    DONE = "DONE"
+    FIRST,
+    SECOND,
+    THIRD,
+    FOURTH,
+    FIFTH,
+    SIXTH,
+    SEVENTH, //todo est-ce que ça doit être un chiffre ou une string
+    DONE
 }

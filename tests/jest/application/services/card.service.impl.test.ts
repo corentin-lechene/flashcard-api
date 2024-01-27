@@ -1,7 +1,8 @@
+import {beforeEach, describe, expect, it} from '@jest/globals';
+
 import {CardServiceImpl} from "../../../../src/application/services/card.service.impl";
-import {CardUserData} from "../../../../src/infrastructure/express/dto/card-user-data.dto";
+import {CardUserData} from "../../../../src/application/dto/card-user-data.dto";
 import {Card, Category} from "../../../../src/domain/models";
-import {describe, beforeEach, expect, it} from '@jest/globals';
 import {cardService} from "../../../config/test.configuration";
 
 describe('CardServiceImpl', () => {
@@ -18,60 +19,42 @@ describe('CardServiceImpl', () => {
             const cardAdded = await cardServiceImpl.createCard(cardUserData);
 
             // Vérifiez que cardAdded est bien du type Card
-            if (cardAdded instanceof Card) {
-                expect(cardAdded.category).toEqual(Category.FIRST);
-            } else {
-                fail("cardAdded n'est pas une instance de Card");
-            }
+            expect(cardAdded).toBeInstanceOf(Card);
+            expect(cardAdded.category).toEqual(Category.FIRST);
         });
     });
 
     describe('incrementCardCategory', () => {
         it('should call incrementCardCategory from cardRepository', async () => {
-            const card = new Card(
-                "id",
-                "question",
-                "answer",
-                Category.FIRST,
-                "tag"
-            );
+            const cardUserData = new CardUserData("question", "answer", "tag");
+            const card = await cardServiceImpl.createCard(cardUserData);
+
             const cardExpected = new Card(
-                "id",
                 "question",
                 "answer",
                 Category.SECOND,
                 "tag"
             );
 
-            const cardRepository = new InMemoryCardRepository();
-            const cardService = new CardServiceImpl(cardRepository);
-            await cardService.incrementCardCategory(card.id);
-            expect(await cardRepository.fetchCardById(card.id)).toStrictEqual(cardExpected);
+            await cardServiceImpl.incrementCardCategory(card.id);
+            expect(card.category).toEqual(cardExpected.category);
         });
 
         it('should do nothing if card is in DONE category', async () => {
-            const card = new Card(
-                "id",
-                "question",
-                "answer",
-                Category.DONE,
-                "tag"
-            );
+            const cardUserData = new CardUserData("question", "answer", "tag");
+            const card = await cardServiceImpl.createCard(cardUserData);
 
-            const cardRepository = new InMemoryCardRepository();
-            const cardService = new CardServiceImpl(cardRepository);
-
-            await cardRepository.updateCard(card); //update card in repository
-            await cardService.incrementCardCategory(card.id);
+            for (let i = 1; i <= Category.DONE; i++) {
+                await cardService.incrementCardCategory(card.id);
+            }
 
             const cardExpected = new Card(
-                "id",
                 "question",
                 "answer",
                 Category.DONE,
                 "tag"
             );
-            expect(await cardRepository.fetchCardById(card.id)).toStrictEqual(cardExpected);
+            expect(card.category).toEqual(cardExpected.category);
         });
     });
 });

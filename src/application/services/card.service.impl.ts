@@ -1,7 +1,7 @@
 import {CardRepository} from "../../domain/repositories/card-repository.interface";
 import {Card, CardId, Category} from "../../domain/models";
 import {CardService} from "./card.service";
-import {CardUserData} from "../../infrastructure/express/dto/card-user-data.dto";
+import {CardUserData} from "../dto/card-user-data.dto";
 
 
 export class CardServiceImpl implements CardService {

@@ -15,7 +15,6 @@ export class InMemoryCardRepository implements CardRepository {
         _cards.push(newCard);
     }
     async fetchCardById(id: CardId): Promise<Card> {
-        if (!id) throw new Error("cardId is required"); // todo create custom error
         const card = _cards.find(card => card.id === id);
         if (!card) {
             throw new Error("card not found");
@@ -25,6 +24,7 @@ export class InMemoryCardRepository implements CardRepository {
 
     async createCard(card: Card): Promise<Card> {
         _cards.push(card);
+        console.log(_cards);
         return card;
     }
 

@@ -1,5 +1,5 @@
 import {Request, RequestHandler, Response} from "express";
-import {CardUserData} from "../dto/card-user-data.dto";
+import {CardUserData} from "../../../application/dto/card-user-data.dto";
 
 declare module 'express' {
     export interface Request {
