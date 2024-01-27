@@ -42,7 +42,7 @@ export class FakeMemoryCardRepository implements CardRepository {
     }
 
     async fetchCardsByTags(tags: String[]): Promise<Card[]> {
-        return [];
+        return _cards.filter(card => tags.includes(card.tag));
     }
 
     async updateCard(card: Card): Promise<void> {
