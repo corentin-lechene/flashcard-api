@@ -4,6 +4,7 @@ import {CardService} from "./card.service";
 import {CardUserData} from "../dto/card-user-data.dto";
 import {CardException} from "../../exceptions/card-exception";
 import {CardMessagesError} from "../../exceptions/card-messages.error.enum";
+import dayjs from "../../../config/dayjs.config";
 
 
 export class CardServiceImpl implements CardService {
@@ -37,6 +38,17 @@ export class CardServiceImpl implements CardService {
     async fetchCardById(cardId: CardId): Promise<Card> {
         if (!cardId) throw new CardException(CardMessagesError.CARD_ID_IS_REQUIRED);
         return this.cardRepository.fetchCardById(cardId);
+    }
+
+    async fetchCardsBySpecificDate(targetDate: Date): Promise<Card[]> {
+        const frequencies = [1, 2, 4, 8, 16, 32, 64];
+        const cards = await this.fetchCards()
+
+        return cards.filter(card => {
+            const daysToReview = frequencies[card.category - 1];
+            const reviewDate = dayjs().add(daysToReview, 'day').startOf('day');
+            return reviewDate.isSame(dayjs(targetDate).startOf('day'), 'day');
+        });
     }
 
     async incrementCardCategory(cardId: CardId): Promise<void> {

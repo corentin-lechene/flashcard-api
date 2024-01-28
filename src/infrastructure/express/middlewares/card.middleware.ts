@@ -31,4 +31,5 @@ export function checkCardBody(): RequestHandler {
         req.cardUserData = new CardUserData(question, answer, tag);
         next();
     }
+
 }

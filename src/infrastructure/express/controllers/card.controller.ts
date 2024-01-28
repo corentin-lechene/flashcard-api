@@ -2,6 +2,7 @@ import {CardService} from "../../../application/services/card.service";
 import {Request, RequestHandler, Response} from "express";
 import {StatusMessage} from "../utils/status-message.util";
 import {CardUserData} from "../../../application/dto/card-user-data.dto";
+import dayjs from "../../../../config/dayjs.config";
 
 export class CardController {
     constructor(private cardService: CardService) {
@@ -66,6 +67,25 @@ export class CardController {
                 console.error(e);
                 res.status(404).statusMessage = StatusMessage.CARD_NOT_FOUND;
                 res.send().end();
+            }
+        }
+    }
+
+    async getCardsByDate(): Promise<RequestHandler> {
+        return async (req: Request, res: Response) => {
+            const stringDate = req.query.date as string || dayjs().format("YYYY-MM-DD");
+            if (!stringDate) return res.status(400).send("Bad request");
+            if (!dayjs(stringDate, "YYYY-MM-DD", true).isValid()) {
+                return res.status(400).send("Format should be YYYY-MM-DD.");
+            }
+
+            const date = dayjs(stringDate, "YYYY-MM-DD", true).toDate();
+            try {
+                const cards = await this.cardService.fetchCardsBySpecificDate(date);
+                res.json(cards);
+            } catch (e) {
+                console.error(e);
+                res.status(400).end();
             }
         }
     }

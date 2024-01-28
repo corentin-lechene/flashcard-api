@@ -11,7 +11,5 @@ export interface CardRepository {
 
     delete(cardId: CardId): Promise<void>;
 
-    fetchCardsBySpecificDate(date: Date): Promise<Card[]>;
-
     updateCard(card: Card): Promise<void>;
 }
