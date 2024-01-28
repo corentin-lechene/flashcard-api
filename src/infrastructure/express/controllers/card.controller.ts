@@ -13,16 +13,10 @@ export class CardController {
             try {
                 if(req.query.tags) {
                     const tags = req.query.tags as string[];
-                    const cardsMatchingTags = await this.cardService.fetchCards(tags);
-                    res.status(200);
+                    const cardsMatchingTags = await this.cardService.fetchCardsByTags(tags);
 
-                    if(cardsMatchingTags.length == 0) {
-                        res.statusMessage = StatusMessage.CARDS_NOT_FOUND;
-                    } else {
-                        res.statusMessage = StatusMessage.FOUND_CARDS_BY_TAG_QUERY;
-                    }
-
-                    res.send(cardsMatchingTags);
+                    res.statusMessage = StatusMessage.CARDS_NOT_FOUND;
+                    res.status(200).send(cardsMatchingTags);
 
                 } else {
                     const allCards = await this.cardService.fetchCards();

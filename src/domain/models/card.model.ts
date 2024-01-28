@@ -12,6 +12,6 @@ export class Card {
         this.category = category;
         this.question = question;
         this.answer = answer;
-        this.tag = tag;
+        this.tag = tag.toLowerCase()
     }
 }

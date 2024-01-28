@@ -22,20 +22,9 @@ describe('CardServiceImpl', () => {
         });
     });
 
-    describe('fetchCards', () => {
-        it('should return cards if no tags', async () => {
-            const cardUserData = new CardUserData("questionAdd", "answerAdd", "tagAdd");
-            const cardAdded = await cardServiceImpl.createCard(cardUserData);
+    describe('fetch cards by tags', () => {
 
-            const cardsMatchingTags = await cardServiceImpl.fetchCards();
-            expect(cardsMatchingTags).toContainEqual(expect.objectContaining({
-                question: cardAdded.question,
-                answer: cardAdded.answer,
-                tag: cardAdded.tag
-            }));
-        });
-
-        it('should return cards matching one tag', async () => {
+        it('should return cards matching two tags (lower case or not)', async () => {
             const tags = ["tagToMatch", "newTagToMatch"];
 
             // init
@@ -46,7 +35,7 @@ describe('CardServiceImpl', () => {
             const cardUserData3 = new CardUserData("questionAdd3", "answerAdd3", "newTagToMatch");
             const cardAdded3 = await cardServiceImpl.createCard(cardUserData3);
 
-            const cardsMatchingTags = await cardServiceImpl.fetchCards(tags);
+            const cardsMatchingTags = await cardServiceImpl.fetchCardsByTags(tags);
 
             expect(cardsMatchingTags).toContainEqual(expect.objectContaining({
                 question: cardAdded.question,
@@ -71,7 +60,7 @@ describe('CardServiceImpl', () => {
             const tags = ["tagNotFound"];
 
             // init
-            const cardsMatchingTags = await cardServiceImpl.fetchCards(tags);
+            const cardsMatchingTags = await cardServiceImpl.fetchCardsByTags(tags);
             expect(cardsMatchingTags.length).toEqual(0);
 
         });
