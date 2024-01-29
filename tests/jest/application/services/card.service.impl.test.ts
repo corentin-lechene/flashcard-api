@@ -15,12 +15,54 @@ describe('CardServiceImpl', () => {
     describe('addCard', () => {
         it('should return a card created in category 1', async () => {
             const cardUserData = new CardUserData("question", "answer", "tag");
-
             const cardAdded = await cardServiceImpl.createCard(cardUserData);
 
-            // Vérifiez que cardAdded est bien du type Card
             expect(cardAdded).toBeInstanceOf(Card);
             expect(cardAdded.category).toEqual(Category.FIRST);
+        });
+    });
+
+    describe('fetch cards by tags', () => {
+
+        it('should return cards matching two tags (lower case or not)', async () => {
+            const tags = ["tagToMatch", "newTagToMatch"];
+
+            // init
+            const cardUserData = new CardUserData("questionAdd", "answerAdd", "tagToMatch");
+            const cardAdded = await cardServiceImpl.createCard(cardUserData);
+            const cardUserData2 = new CardUserData("questionAdd2", "answerAdd2", "tagToMatch");
+            const cardAdded2 = await cardServiceImpl.createCard(cardUserData2);
+            const cardUserData3 = new CardUserData("questionAdd3", "answerAdd3", "newTagToMatch");
+            const cardAdded3 = await cardServiceImpl.createCard(cardUserData3);
+
+            const cardsMatchingTags = await cardServiceImpl.fetchCardsByTags(tags);
+
+            expect(cardsMatchingTags).toContainEqual(expect.objectContaining({
+                question: cardAdded.question,
+                answer: cardAdded.answer,
+                tag: cardAdded.tag
+            }));
+            expect(cardsMatchingTags).toContainEqual(expect.objectContaining({
+                question: cardAdded2.question,
+                answer: cardAdded2.answer,
+                tag: cardAdded2.tag
+            }));
+            expect(cardsMatchingTags).toContainEqual(expect.objectContaining({
+                question: cardAdded3.question,
+                answer: cardAdded3.answer,
+                tag: cardAdded3.tag
+            }));
+            expect(cardsMatchingTags.length).toEqual(3);
+
+        });
+
+        it('should return no cards cause no matching tags', async () => {
+            const tags = ["tagNotFound"];
+
+            // init
+            const cardsMatchingTags = await cardServiceImpl.fetchCardsByTags(tags);
+            expect(cardsMatchingTags.length).toEqual(0);
+
         });
     });
 

@@ -17,6 +17,10 @@ export class CardServiceImpl implements CardService {
         return this.cardRepository.fetchCards();
     }
 
+    async fetchCardsByTags(tags: string[]): Promise<Card[]> {
+        return this.cardRepository.fetchCardsByTags(tags);
+    }
+
     async createCard(cardUserData: CardUserData): Promise<Card> {
         const card = new Card(cardUserData.question, cardUserData.answer, Category.FIRST, cardUserData.tag);
         return this.cardRepository.createCard(card);

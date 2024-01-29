@@ -22,6 +22,7 @@ export class InMemoryCardRepository implements CardRepository {
         return card;
     }
 
+
     async createCard(card: Card): Promise<Card> {
         _cards.push(card);
         console.log(_cards);
@@ -41,8 +42,8 @@ export class InMemoryCardRepository implements CardRepository {
         return [];
     }
 
-    async fetchCardsByTags(tags: String[]): Promise<Card[]> {
-        return [];
+    async fetchCardsByTags(tags: string[]): Promise<Card[]> {
+        return _cards.filter(card => tags.map(tag => tag.toLowerCase()).includes(card.tag.toLowerCase()));
     }
 
     async updateCard(card: Card): Promise<void> {
