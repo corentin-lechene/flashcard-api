@@ -22,6 +22,10 @@ export class CardServiceImpl implements CardService {
     }
 
     async createCard(cardUserData: CardUserData): Promise<Card> {
+        if (!cardUserData.question.trim() || !cardUserData.answer.trim() || !cardUserData.tag.trim()) {
+            throw new Error('Tous les champs doivent être remplis.');
+        }
+
         const card = new Card(cardUserData.question, cardUserData.answer, Category.FIRST, cardUserData.tag);
         return this.cardRepository.createCard(card);
     }

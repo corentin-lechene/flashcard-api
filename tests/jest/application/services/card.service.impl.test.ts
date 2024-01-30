@@ -20,6 +20,20 @@ describe('CardServiceImpl', () => {
             expect(cardAdded).toBeInstanceOf(Card);
             expect(cardAdded.category).toEqual(Category.FIRST);
         });
+
+        it('should throw an error if one field is null or undefined', async () => {
+            await Promise.all([
+                ["question", "answer", " "],
+                ["question", " ", "tag"],
+                [" ", "answer", "tag"],
+                [" ", " ", ""],
+            ].map(async ([question, answer, tag]) => {
+                await expect(async () => await cardServiceImpl.createCard(new CardUserData(question, answer, tag)))
+                    .rejects.toThrowError('Tous les champs doivent être remplis.');
+            }));
+        });
+
+
     });
 
     describe('fetch cards by tags', () => {
