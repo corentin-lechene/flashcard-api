@@ -82,7 +82,8 @@ export class CardController {
             const date = dayjs(stringDate, "YYYY-MM-DD", true).toDate();
             try {
                 const cards = await this.cardService.fetchCardsBySpecificDate(date);
-                res.json(cards);
+                res.status(200).statusMessage = StatusMessage.CARD_FETCHED;
+                res.json(cards).end();
             } catch (e) {
                 console.error(e);
                 res.status(400).end();
