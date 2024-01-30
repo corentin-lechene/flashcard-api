@@ -26,7 +26,7 @@ export async function start_express() {
     const cardController = new CardController(cardService);
     app.get("/cards", await cardController.fetchCards());
     app.post("/cards", checkCardBody(), await cardController.addCard());
-    app.patch("/cards/:cardId/answer", await cardController.updateCardAnswer());
+    app.patch("/cards/:cardId/answer", await cardController.updateCardCategory());
 
     // populate for dev
 
