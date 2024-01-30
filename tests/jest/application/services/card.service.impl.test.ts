@@ -4,6 +4,8 @@ import {CardServiceImpl} from "../../../../src/application/services/card.service
 import {CardUserData} from "../../../../src/application/dto/card-user-data.dto";
 import {Card, Category} from "../../../../src/domain/models";
 import {cardService} from "../../../config/test.configuration";
+import {CardMessagesError} from "../../../../src/exceptions/card-messages.error.enum";
+import {CardException} from "../../../../src/exceptions/card-exception";
 
 describe('CardServiceImpl', () => {
     let cardServiceImpl: CardServiceImpl;
@@ -20,6 +22,20 @@ describe('CardServiceImpl', () => {
             expect(cardAdded).toBeInstanceOf(Card);
             expect(cardAdded.category).toEqual(Category.FIRST);
         });
+
+        it('should throw an error if one field is null or undefined', async () => {
+            await Promise.all([
+                ["question", "answer", " "],
+                ["question", " ", "tag"],
+                [" ", "answer", "tag"],
+                [" ", " ", ""],
+            ].map(async ([question, answer, tag]) => {
+                await expect(async () => await cardServiceImpl.createCard(new CardUserData(question, answer, tag)))
+                    .rejects.toThrowError(new CardException(CardMessagesError.ALL_FIELDS_MUST_BE_FILL));
+            }));
+        });
+
+
     });
 
     describe('fetch cards by tags', () => {

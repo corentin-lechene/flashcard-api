@@ -1,5 +1,7 @@
 import {Card, CardId, Category} from "../../src/domain/models";
 import {CardRepository} from "../../src/domain/repositories/card-repository.interface";
+import {CardMessagesError} from "../../src/exceptions/card-messages.error.enum";
+import {CardException} from "../../src/exceptions/card-exception";
 
 
 const _cards: Card[] = []
@@ -18,7 +20,7 @@ export class FakeMemoryCardRepository implements CardRepository {
     async fetchCardById(id: CardId): Promise<Card> {
         const card = _cards.find(card => card.id === id);
         if (!card) {
-            throw new Error("card not found");
+            throw new CardException(CardMessagesError.CARD_NOT_FOUND);
         }
         return card;
     }
@@ -48,7 +50,7 @@ export class FakeMemoryCardRepository implements CardRepository {
     async updateCard(card: Card): Promise<void> {
         const index = _cards.findIndex(_card => _card.id === card.id);
         if (index === -1) {
-            throw new Error("card not found");
+            throw new CardException(CardMessagesError.CARD_NOT_FOUND);
         }
         _cards[index] = card;
         await Promise.resolve();

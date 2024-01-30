@@ -15,7 +15,7 @@ export class CardController {
                     const tags = req.query.tags as string[];
                     const cardsMatchingTags = await this.cardService.fetchCardsByTags(tags);
 
-                    res.statusMessage = StatusMessage.CARDS_NOT_FOUND;
+                    res.statusMessage = StatusMessage.FOUND_CARDS_BY_TAG_QUERY;
                     res.status(200).send(cardsMatchingTags);
 
                 } else {
@@ -24,6 +24,7 @@ export class CardController {
                 }
 
             } catch (e) {
+                console.error(e);
                 res.status(400).send();
             }
 
@@ -39,18 +40,19 @@ export class CardController {
                 res.status(201).statusMessage = StatusMessage.CREATED_CARD;
                 res.json(cardAdded).end();
             } catch (e) {
+                console.error(e);
                 res.status(400).end();
             }
         }
     }
 
-    async updateCardAnswer(): Promise<RequestHandler> {
+    async updateCardCategory(): Promise<RequestHandler> {
         return async (req, res) => {
             const {isValid} = req.body;
-            if (typeof isValid !== "boolean") return res.status(400).send("Bad request");
+            if (typeof isValid !== "boolean") return res.status(400);
 
             const {cardId} = req.params;
-            if (!cardId) return res.status(400).send("Bad request");
+            if (!cardId) return res.status(400);
 
             try {
                 if (isValid) {
@@ -58,10 +60,12 @@ export class CardController {
                 } else {
                     await this.cardService.resetCardCategory(cardId);
                 }
-                res.status(200).end();
+                res.status(204).statusMessage = StatusMessage.ANSWER_TAKEN_ACCOUNT;
+                res.send().end();
             } catch (e) {
                 console.error(e);
-                res.status(404).send("Card not found"); //todo create custom error
+                res.status(404).statusMessage = StatusMessage.CARD_NOT_FOUND;
+                res.send().end();
             }
         }
     }
