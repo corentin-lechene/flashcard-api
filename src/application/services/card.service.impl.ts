@@ -2,6 +2,8 @@ import {CardRepository} from "../../domain/repositories/card-repository.interfac
 import {Card, CardId, Category} from "../../domain/models";
 import {CardService} from "./card.service";
 import {CardUserData} from "../dto/card-user-data.dto";
+import {CardException} from "../../exceptions/card-exception";
+import {CardMessagesError} from "../../exceptions/card-messages.error.enum";
 
 
 export class CardServiceImpl implements CardService {
@@ -23,7 +25,7 @@ export class CardServiceImpl implements CardService {
 
     async createCard(cardUserData: CardUserData): Promise<Card> {
         if (!cardUserData.question.trim() || !cardUserData.answer.trim() || !cardUserData.tag.trim()) {
-            throw new Error('Tous les champs doivent être remplis.');
+            throw new CardException(CardMessagesError.ALL_FIELDS_MUST_BE_FILL);
         }
 
         const card = new Card(cardUserData.question, cardUserData.answer, Category.FIRST, cardUserData.tag);
@@ -33,7 +35,7 @@ export class CardServiceImpl implements CardService {
 
 
     async fetchCardById(cardId: CardId): Promise<Card> {
-        if (!cardId) throw new Error("cardId is required"); // todo create custom error
+        if (!cardId) throw new CardException(CardMessagesError.CARD_ID_IS_REQUIRED);
         return this.cardRepository.fetchCardById(cardId);
     }
 
