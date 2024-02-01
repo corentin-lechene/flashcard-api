@@ -12,8 +12,8 @@ export class CardController {
         return async (req: Request, res: Response) => {
             try {
                 if(req.query.tags) {
-                    const tags = req.query.tags as string[];
-                    const cardsMatchingTags = await this.cardService.fetchCardsByTags(tags);
+                    const tags = Array.isArray(req.query.tags) ? req.query.tags : [req.query.tags];
+                    const cardsMatchingTags = await this.cardService.fetchCardsByTags(tags as string[]);
 
                     res.statusMessage = StatusMessage.FOUND_CARDS_BY_TAG_QUERY;
                     res.status(200).send(cardsMatchingTags);
