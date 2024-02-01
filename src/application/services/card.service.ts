@@ -9,4 +9,5 @@ export interface CardService {
     fetchCardById(cardId: CardId): Promise<Card>;
     incrementCardCategory(cardId: CardId): Promise<void>;
     resetCardCategory(cardId: CardId): Promise<void>;
+    fetchCardsBySpecificDate(date: Date): Promise<Card[]>;
 }

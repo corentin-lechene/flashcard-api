@@ -27,6 +27,7 @@ export async function start_express() {
     app.get("/cards", await cardController.fetchCards());
     app.post("/cards", checkCardBody(), await cardController.addCard());
     app.patch("/cards/:cardId/answer", await cardController.updateCardCategory());
+    app.get("/cards/quizz", await cardController.getCardsByDate());
 
     // populate for dev
 
