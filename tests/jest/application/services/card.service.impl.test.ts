@@ -6,8 +6,10 @@ import {Card, Category} from "../../../../src/domain/models";
 import {cardService} from "../../../config/test.configuration";
 import {CardMessagesError} from "../../../../src/exceptions/card-messages.error.enum";
 import {CardException} from "../../../../src/exceptions/card-exception";
+import dayjs from "../../../../config/dayjs.config";
 
 describe('CardServiceImpl', () => {
+
     let cardServiceImpl: CardServiceImpl;
 
     beforeEach(() => {
@@ -113,6 +115,43 @@ describe('CardServiceImpl', () => {
                 "tag"
             );
             expect(card.category).toEqual(cardExpected.category);
+        });
+    });
+
+    describe('fetchCardsBySpecificDate', () => {
+        it('should return cards whose review date matches the specific date', async () => {
+            const card1 = new Card("question", "answer", Category.DONE, "tag");
+            await cardServiceImpl.createCard(card1);
+            const card2 = new Card("question", "answer", Category.SECOND, "tag");
+            await cardServiceImpl.createCard(card2);
+            const card3 = new Card("question", "answer", Category.THIRD, "tag");
+            await cardServiceImpl.createCard(card3);
+
+            const targetDate = dayjs().add(2, 'day').toDate();
+            const cardsOnTargetDate = await cardServiceImpl.fetchCardsBySpecificDate(targetDate);
+
+            expect(cardsOnTargetDate).toEqual(expect.arrayContaining([
+                expect.objectContaining({
+                    question: card2.question,
+                    answer: card2.answer,
+                    tag: card2.tag,
+                    category: card2.category
+                })
+            ]));
+            expect(cardsOnTargetDate).not.toEqual(expect.arrayContaining([
+                expect.objectContaining({
+                    question: card2.question,
+                    answer: card2.answer,
+                    tag: card2.tag,
+                    category: card2.category
+                }),
+                expect.objectContaining({
+                    question: card3.question,
+                    answer: card3.answer,
+                    tag: card3.tag,
+                    category: card3.category
+                })
+            ]));
         });
     });
 });

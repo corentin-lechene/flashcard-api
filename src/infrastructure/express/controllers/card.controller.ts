@@ -2,7 +2,7 @@ import {CardService} from "../../../application/services/card.service";
 import {Request, RequestHandler, Response} from "express";
 import {StatusMessage} from "../utils/status-message.util";
 import {CardUserData} from "../../../application/dto/card-user-data.dto";
-import dayjs from "../../../../config/dayjs.config";
+import dayjs, {FormatDayjs} from "../../../../config/dayjs.config";
 
 export class CardController {
     constructor(private cardService: CardService) {
@@ -73,13 +73,13 @@ export class CardController {
 
     async getCardsByDate(): Promise<RequestHandler> {
         return async (req: Request, res: Response) => {
-            const stringDate = req.query.date as string || dayjs().format("YYYY-MM-DD");
+            const stringDate = req.query.date as string || dayjs().format(FormatDayjs.FORMAT_DATE);
             if (!stringDate) return res.status(400).send("Bad request");
-            if (!dayjs(stringDate, "YYYY-MM-DD", true).isValid()) {
-                return res.status(400).send("Format should be YYYY-MM-DD.");
+            if (!dayjs(stringDate, FormatDayjs.FORMAT_DATE, true).isValid()) {
+                return res.status(400).send("Format should be ${FormatDayjs.FORMAT_DATE}.");
             }
 
-            const date = dayjs(stringDate, "YYYY-MM-DD", true).toDate();
+            const date = dayjs(stringDate, FormatDayjs.FORMAT_DATE, true).toDate();
             try {
                 const cards = await this.cardService.fetchCardsBySpecificDate(date);
                 res.status(200).statusMessage = StatusMessage.CARD_FETCHED;
