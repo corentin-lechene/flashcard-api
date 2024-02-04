@@ -1,5 +1,6 @@
 import * as express from "express";
 import * as cors from 'cors';
+import * as dotenv from "dotenv";
 
 import {loggingMiddleware, undefinedMiddleware} from "./middlewares/logging.middleware";
 
@@ -7,13 +8,15 @@ import {cardService} from "../../application.configuration"; //fixme
 import {checkCardBody} from "./middlewares/card.middleware"; // fixme
 import {CardController} from "./controllers/card.controller"; //fixme
 
+dotenv.config();
+
 const PORT = process.env.PORT || 8080;
 
 export async function start_express() {
     const app = express();
 
     app.use(cors());
-    app.use(cors({ origin: ['http://localhost:5173'] }));
+    app.use(cors({origin: [process.env.CLIENT_URL || "http://localhost:5173"]}));
     app.use(express.json());
 
     // logs
