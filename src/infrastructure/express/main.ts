@@ -3,16 +3,18 @@ import * as cors from 'cors';
 
 import {loggingMiddleware, undefinedMiddleware} from "./middlewares/logging.middleware";
 
-import {CardController} from "./controllers/card-controller"; //fixme
 import {cardService} from "../../application.configuration"; //fixme
+import {checkCardBody} from "./middlewares/card.middleware"; // fixme
+import {CardController} from "./controllers/card.controller"; //fixme
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 export async function start_express() {
     const app = express();
 
     app.use(cors());
     app.use(cors({ origin: ['http://localhost:5173'] }));
+    app.use(express.json());
 
     // logs
     app.use(loggingMiddleware());
@@ -23,7 +25,9 @@ export async function start_express() {
     // all routes
     const cardController = new CardController(cardService);
     app.get("/cards", await cardController.fetchCards());
-    //todo ajouter ici pour le moment
+    app.post("/cards", checkCardBody(), await cardController.addCard());
+    app.patch("/cards/:cardId/answer", await cardController.updateCardCategory());
+    app.get("/cards/quizz", await cardController.getCardsByDate());
 
     // populate for dev
 

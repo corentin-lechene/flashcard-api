@@ -1,11 +1,12 @@
-import {CardRepository} from "../../domain/repositories/card-repository.interface";
-import {Card, CardId, Category} from "../../domain/models";
-import {CardException} from "../../exceptions/card-exception";
-import {CardMessagesError} from "../../exceptions/card-messages.error.enum";
+import {Card, CardId, Category} from "../../src/domain/models";
+import {CardRepository} from "../../src/domain/repositories/card-repository.interface";
+import {CardMessagesError} from "../../src/exceptions/card-messages.error.enum";
+import {CardException} from "../../src/exceptions/card-exception";
+
 
 const _cards: Card[] = []
 
-export class InMemoryCardRepository implements CardRepository {
+export class FakeMemoryCardRepository implements CardRepository {
     //init
     constructor() {
         const newCard = new Card(
@@ -24,10 +25,8 @@ export class InMemoryCardRepository implements CardRepository {
         return card;
     }
 
-
     async createCard(card: Card): Promise<Card> {
         _cards.push(card);
-        console.log(_cards);
         return card;
     }
 
