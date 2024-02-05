@@ -9,7 +9,5 @@ export interface CardRepository {
 
     create(card: Card): Promise<Card>;
 
-    remove(cardId: CardId): Promise<void>;
-
     update(card: Card): Promise<void>;
 }

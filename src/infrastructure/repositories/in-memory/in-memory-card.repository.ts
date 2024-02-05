@@ -1,7 +1,7 @@
-import {Card} from "../../src/domains/cards/card.model";
-import {CardRepository} from "../../src/domains/cards/card.repository";
-import {Category} from "../../src/domains/cards/category";
-import {CardId} from "../../src/domains/cards/card-id";
+import {Card} from "../../../domains/cards/card.model";
+import {CardRepository} from "../../../domains/cards/card.repository";
+import {Category} from "../../../domains/cards/category";
+import {CardId} from "../../../domains/cards/card-id";
 
 
 const _cards: Card[] = []

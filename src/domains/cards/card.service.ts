@@ -42,7 +42,7 @@ export class CardService {
 
 
     async create(question: string, answer: string, tag: string): Promise<Card> {
-        if(!question || !answer || !tag) {
+        if (!question?.trim() || !answer?.trim() || !tag?.trim()) {
             throw new CardException(CardMessagesError.ALL_FIELDS_MUST_BE_FILL);
         }
 
@@ -55,8 +55,7 @@ export class CardService {
     }
 
 
-
-    protected nextCategory(currentCategory: Category): Category { //fixme à déplacer ??
+    nextCategory(currentCategory: Category): Category { //fixme à déplacer ??
         const categories = Object.values(Category);
         const currentIndex = categories.indexOf(currentCategory);
         if (currentIndex === categories.length - 1) return Category.DONE;
