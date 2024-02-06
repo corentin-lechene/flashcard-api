@@ -6,7 +6,7 @@ import {CardId} from "../../../domains/cards/card-id";
 
 const _cards: Card[] = []
 
-export class FakeMemoryCardRepository implements CardRepository {
+export class InMemoryCardRepository implements CardRepository {
     //init
     constructor() {
         _cards.filter(card => card.id.value === "");
