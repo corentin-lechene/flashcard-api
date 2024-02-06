@@ -3,6 +3,8 @@ import {Card} from "./card.model";
 
 
 export interface CardRepository {
+    fetchAll(): Promise<Card[]>;
+
     fetchById(id: CardId): Promise<Card>;
 
     fetchByTags(tags: string[]): Promise<Card[]>;

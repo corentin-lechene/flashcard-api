@@ -10,6 +10,10 @@ export class CardService {
     constructor(private cardRepository: CardRepository) {
         this.cardRepository = cardRepository;
     }
+    
+    async fetchAll(): Promise<Card[]> {
+        return this.cardRepository.fetchAll();
+    }
 
     async fetchByTags(tags: string[]): Promise<Card[]> {
         return this.cardRepository.fetchByTags(tags);
