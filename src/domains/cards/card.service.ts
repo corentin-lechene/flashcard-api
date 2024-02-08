@@ -20,14 +20,7 @@ export class CardService {
     }
 
     async fetchById(cardId: CardId) {
-        if(!cardId) {
-            throw new CardException(CardMessagesError.CARD_ID_IS_REQUIRED);
-        }
-        try {
-            return this.cardRepository.fetchById(cardId);
-        } catch (error) {
-            throw new Error(); //fixme à demander
-        }
+        return this.cardRepository.fetchById(cardId);
     }
 
     async answer(cardId: CardId, isValid: boolean) {
@@ -37,11 +30,8 @@ export class CardService {
         } else {
             card.category = Category.FIRST;
         }
-        try {
-            return this.cardRepository.update(card);
-        } catch (error) {
-            throw new Error(); //fixme à demander
-        }
+
+        return this.cardRepository.update(card);
     }
 
 
@@ -51,11 +41,7 @@ export class CardService {
         }
 
         const newCard = new Card(question, answer, Category.FIRST, tag);
-        try {
-            return this.cardRepository.create(newCard);
-        } catch (error) {
-            throw new Error(); //fixme à demander
-        }
+        return this.cardRepository.create(newCard);
     }
 
 
