@@ -1,8 +1,9 @@
 import {CardService} from "../../../../domains/cards/card.service";
-import {RequestHandler} from "express";
+import {Request, RequestHandler, Response} from "express";
 import {StatusMessage} from "../../../status-message";
 import {CardId} from "../../../../domains/cards/card-id";
 import {CardUserData} from "../../dto/cards/card-user-data.dto";
+import dayjs, {FormatDayjs} from "../../../../../config/dayjs.config";
 
 
 export class CardController {
@@ -81,9 +82,23 @@ export class CardController {
         }
     }
 
-    // async getCardsByDate(): Promise<RequestHandler> {
-    //     return async (req: Request, res: Response) => {
-    //
-    //     }
-    // }
+    async getCardsByDate(): Promise<RequestHandler> {
+        return async (req: Request, res: Response) => {
+            const stringDate = req.query.date as string || dayjs().format(FormatDayjs.FORMAT_DATE);
+            if (!stringDate) return res.status(400).send("Bad request");
+            if (!dayjs(stringDate, FormatDayjs.FORMAT_DATE, true).isValid()) {
+                return res.status(400).send("Format should be ${FormatDayjs.FORMAT_DATE}.");
+            }
+
+            const date = dayjs(stringDate, FormatDayjs.FORMAT_DATE, true).toDate();
+            try {
+                const cards = await this.cardService.fetchCardsBySpecificDate(date);
+                res.status(200).statusMessage = StatusMessage.CARD_FETCHED;
+                res.json(cards).end();
+            } catch (e) {
+                console.error(e);
+                res.status(400).end();
+            }
+        }
+    }
 }
