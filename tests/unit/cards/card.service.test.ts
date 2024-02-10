@@ -5,6 +5,7 @@ import {Category} from "../../../src/domains/cards/category";
 import {CardException} from "../../../src/domains/cards/card.exception";
 import {CardMessagesError} from "../../../src/domains/cards/card.message-error";
 import {FakeMemoryCardRepository} from "../../config/fake-memory-card.repository";
+import dayjs from "../../../config/dayjs.config"
 
 describe('CardService', function () {
     let cardService: CardService;
@@ -113,11 +114,48 @@ describe('CardService', function () {
             expect(expectedCard.category).toBe(Category.FIRST);
         });
     });
+
+    describe('fetchCardsBySpecificDate', () => {
+        it('should return only the cards whose next review date matches the specific date', async () => {
+            // Création des cartes avec leur dernière date de réponse correcte dans le passé.
+            const card1 = await cardService.create("question1", "answer1", "tag1");
+            card1.lastAnsweredDate = dayjs().subtract(1, 'day').toDate(); // Révisée hier.
+
+            const card2 = await cardService.create("question2", "answer2", "tag2");
+            card2.lastAnsweredDate = dayjs().subtract(2, 'day').toDate(); // Révisée avant-hier.
+
+            const card3 = await cardService.create("question2", "answer2", "tag2");
+            card3.lastAnsweredDate = dayjs().subtract(3, 'day').toDate(); // Révisée avant-hier.
+
+            card2.category = Category.SECOND;
+
+            const targetDate = dayjs().toDate();
+
+            const cardsOnTargetDate = await cardService.fetchCardsBySpecificDate(targetDate);
+
+            expect(cardsOnTargetDate).toEqual(expect.arrayContaining([
+                expect.objectContaining({
+                    question: card2.question,
+                    answer: card2.answer,
+                    tag: card2.tag,
+                    category: card2.category
+                })
+            ]));
+
+            expect(cardsOnTargetDate).not.toEqual(expect.arrayContaining([
+                expect.objectContaining({
+                    question: card1.question,
+                    answer: card1.answer,
+                    tag: card1.tag,
+                    category: card1.category
+                }),
+                expect.objectContaining({
+                    question: card3.question,
+                    answer: card3.answer,
+                    tag: card3.tag,
+                    category: card3.category
+                })
+            ]));
+        });
+    });
 });
-
-
-
-
-
-
-
