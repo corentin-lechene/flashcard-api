@@ -121,8 +121,7 @@ describe('CardService', function () {
             const card2 = await cardService.create("question", "answer", "tag");
             const card3 = await cardService.create("question", "answer", "tag");
 
-            const currentCategory = Category.FIRST;
-            card2.category = cardService.nextCategory(currentCategory);
+            card2.category = Category.SECOND;
 
             const targetDate = dayjs().add(2, 'day').toDate();
 
@@ -155,8 +154,7 @@ describe('CardService', function () {
         it('should return cards whose review date is today', async () => {
             const card1 = await cardService.create("question", "answer", "tag");
 
-            const currentCategory = Category.DONE;
-            card1.category = cardService.nextCategory(currentCategory);
+            card1.category = Category.DONE;
 
             const targetDate = dayjs().toDate();
             const cardsOnTargetDate = await cardService.fetchCardsBySpecificDate(targetDate);
