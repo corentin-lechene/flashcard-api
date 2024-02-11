@@ -154,12 +154,27 @@ describe('CardService', function () {
         it('should return cards whose review date is today', async () => {
             const card1 = await cardService.create("question", "answer", "tag");
 
+            const targetDate = dayjs().toDate();
+            const cardsOnTargetDate = await cardService.fetchCardsBySpecificDate(targetDate);
+
+            expect(cardsOnTargetDate).toEqual(expect.arrayContaining([
+                expect.objectContaining({
+                    question: card1.question,
+                    answer: card1.answer,
+                    tag: card1.tag,
+                    category: card1.category
+                })
+            ]));
+        });
+        it('should not return cards in the DONE category regardless of the date', async () => {
+            const card1 = await cardService.create("question", "answer", "tag");
+
             card1.category = Category.DONE;
 
             const targetDate = dayjs().toDate();
             const cardsOnTargetDate = await cardService.fetchCardsBySpecificDate(targetDate);
 
-            expect(cardsOnTargetDate).toEqual(expect.arrayContaining([
+            expect(cardsOnTargetDate).not.toEqual(expect.arrayContaining([
                 expect.objectContaining({
                     question: card1.question,
                     answer: card1.answer,

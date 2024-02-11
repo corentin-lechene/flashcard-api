@@ -63,10 +63,21 @@ export class CardService {
         const cards = await this.fetchAll();
 
         return cards.filter(card => {
-            const daysToReview = REVIEW_FREQUENCIES[card.category] ?? 0;
-            const reviewDate = dayjs().add(daysToReview, 'day').startOf('day');
+            if (card.category === Category.DONE) {
+                return false;
+            }
+            const daysToReview = this.getDaysToReview(card.category);
+            const reviewDate = dayjs().startOf('day').add(daysToReview, 'day');
             return reviewDate.isSame(dayjs(targetDate).startOf('day'), 'day');
         });
+    }
+
+    getDaysToReview(category: Category): number {
+        if (category === Category.FIRST) {
+            return 0;
+        } else {
+            return REVIEW_FREQUENCIES[category] ?? 0;
+        }
     }
 
     nextCategory(currentCategory: Category): Category { //fixme à déplacer ??
