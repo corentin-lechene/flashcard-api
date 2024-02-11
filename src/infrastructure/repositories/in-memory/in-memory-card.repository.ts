@@ -10,7 +10,7 @@ export class InMemoryCardRepository implements CardRepository {
     //init
     constructor() {
         _cards.filter(card => card.id.value === "");
-        const newCard = new Card("question", "answer", Category.FIRST, "tag", new Date());
+        const newCard = new Card("question", "answer", Category.FIRST, "tag");
         _cards.push(newCard);
     }
 

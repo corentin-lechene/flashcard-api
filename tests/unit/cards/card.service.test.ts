@@ -1,7 +1,7 @@
 import {beforeEach, describe, expect, it} from '@jest/globals';
 import {CardService} from "../../../src/domains/cards/card.service";
 import {Card} from "../../../src/domains/cards/card.model";
-import {Category} from "../../../src/domains/cards/category";
+import {Category, REVIEW_FREQUENCIES} from "../../../src/domains/cards/category";
 import {CardException} from "../../../src/domains/cards/card.exception";
 import {CardMessagesError} from "../../../src/domains/cards/card.message-error";
 import {FakeMemoryCardRepository} from "../../config/fake-memory-card.repository";
@@ -117,20 +117,12 @@ describe('CardService', function () {
 
     describe('fetchCardsBySpecificDate', () => {
         it('should return only the cards whose next review date matches the specific date', async () => {
-            // Création des cartes avec leur dernière date de réponse correcte dans le passé.
-            const card1 = await cardService.create("question1", "answer1", "tag1");
-            card1.lastAnsweredDate = dayjs().subtract(1, 'day').toDate(); // Révisée hier.
-
-            const card2 = await cardService.create("question2", "answer2", "tag2");
-            card2.lastAnsweredDate = dayjs().subtract(2, 'day').toDate(); // Révisée avant-hier.
-
-            const card3 = await cardService.create("question2", "answer2", "tag2");
-            card3.lastAnsweredDate = dayjs().subtract(3, 'day').toDate(); // Révisée avant-hier.
+            const card2 = await cardService.create("question", "answer", "tag");
+            card2.answeredAt = dayjs().subtract(2, 'day').toDate();
 
             card2.category = Category.SECOND;
 
             const targetDate = dayjs().toDate();
-
             const cardsOnTargetDate = await cardService.fetchCardsBySpecificDate(targetDate);
 
             expect(cardsOnTargetDate).toEqual(expect.arrayContaining([
@@ -141,6 +133,30 @@ describe('CardService', function () {
                     category: card2.category
                 })
             ]));
+        });
+        it('should return cards whose review date is today', async () => {
+            const card1 = await cardService.create("question", "answer", "tag");
+            card1.answeredAt = dayjs().subtract(1, 'day').toDate();
+
+            const targetDate = dayjs().toDate();
+            const cardsOnTargetDate = await cardService.fetchCardsBySpecificDate(targetDate);
+
+            expect(cardsOnTargetDate).toEqual(expect.arrayContaining([
+                expect.objectContaining({
+                    question: card1.question,
+                    answer: card1.answer,
+                    tag: card1.tag,
+                    category: card1.category
+                })
+            ]));
+        });
+        it('should not return cards in the DONE category regardless of the date', async () => {
+            const card1 = await cardService.create("question", "answer", "tag");
+
+            card1.category = Category.DONE;
+
+            const targetDate = dayjs().toDate();
+            const cardsOnTargetDate = await cardService.fetchCardsBySpecificDate(targetDate);
 
             expect(cardsOnTargetDate).not.toEqual(expect.arrayContaining([
                 expect.objectContaining({
@@ -148,12 +164,6 @@ describe('CardService', function () {
                     answer: card1.answer,
                     tag: card1.tag,
                     category: card1.category
-                }),
-                expect.objectContaining({
-                    question: card3.question,
-                    answer: card3.answer,
-                    tag: card3.tag,
-                    category: card3.category
                 })
             ]));
         });

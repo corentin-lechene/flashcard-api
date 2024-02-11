@@ -46,12 +46,12 @@ export class CardService {
     }
 
 
-    async create(question: string, answer: string, tag: string): Promise<Card> {
+    async create(question: string, answer: string, tag: string, answeredAt?: Date): Promise<Card> {
         if (!question?.trim() || !answer?.trim() || !tag?.trim()) {
             throw new CardException(CardMessagesError.ALL_FIELDS_MUST_BE_FILL);
         }
 
-        const newCard = new Card(question, answer, Category.FIRST, tag, new Date());
+        const newCard = new Card(question, answer, Category.FIRST, tag, answeredAt);
         try {
             return this.cardRepository.create(newCard);
         } catch (error) {
@@ -65,16 +65,20 @@ export class CardService {
             if (card.category === Category.DONE) {
                 return false;
             }
-            const daysToReview = REVIEW_FREQUENCIES[card.category];
-            if (daysToReview === undefined) {
-                return false;
-            }
-            const theoreticalReviewDate = dayjs(card.lastAnsweredDate).add(daysToReview, 'day').startOf('day');
+
+            const daysToReview = this.getDaysToReview(card.category)
+            const theoreticalReviewDate = dayjs(card.answeredAt).add(daysToReview, 'day').startOf('day');
             return theoreticalReviewDate.isSame(dayjs(targetDate).startOf('day'), 'day');
         });
     }
 
-
+    getDaysToReview(category: Category): number {
+        if (category === Category.FIRST) {
+            return 0;
+        } else {
+            return REVIEW_FREQUENCIES[category] ?? 0;
+        }
+    }
 
     nextCategory(currentCategory: Category): Category { //fixme à déplacer ??
         const categories = Object.values(Category);
