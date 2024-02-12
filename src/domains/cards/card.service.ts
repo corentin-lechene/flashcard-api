@@ -46,19 +46,6 @@ export class CardService {
     }
 
 
-    async create(question: string, answer: string, tag: string, answeredAt?: Date): Promise<Card> {
-        if (!question?.trim() || !answer?.trim() || !tag?.trim()) {
-            throw new CardException(CardMessagesError.ALL_FIELDS_MUST_BE_FILL);
-        }
-
-        const newCard = new Card(question, answer, Category.FIRST, tag, answeredAt);
-        try {
-            return this.cardRepository.create(newCard);
-        } catch (error) {
-            throw new Error(); //fixme à demander
-        }
-    }
-
     async fetchCardsBySpecificDate(targetDate: Date): Promise<Card[]> {
         const cards = await this.fetchAll();
         return cards.filter(card => {
@@ -70,6 +57,19 @@ export class CardService {
             const theoreticalReviewDate = dayjs(card.answeredAt).add(daysToReview, 'day').startOf('day');
             return theoreticalReviewDate.isSame(dayjs(targetDate).startOf('day'), 'day');
         });
+    }
+
+    async create(question: string, answer: string, tag: string): Promise<Card> {
+        if (!question?.trim() || !answer?.trim() || !tag?.trim()) {
+            throw new CardException(CardMessagesError.ALL_FIELDS_MUST_BE_FILL);
+        }
+
+        const newCard = new Card(question, answer, Category.FIRST, tag);
+        try {
+            return this.cardRepository.create(newCard);
+        } catch (error) {
+            throw new Error(); //fixme à demander
+        }
     }
 
     getDaysToReview(category: Category): number {
