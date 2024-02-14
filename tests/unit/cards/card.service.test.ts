@@ -131,10 +131,9 @@ describe('CardService', function () {
             const card2 = await cardService.create("question", "answer", "tag");
             const card3 = await cardService.create("question", "answer", "tag");
 
-            card2.category = Category.SECOND;
+            await cardService.answer(card2.id, true);
 
             const targetDate = dayjs().add(2, 'day').toDate();
-
             const cardsOnTargetDate = await cardService.fetchCardsBySpecificDate(targetDate);
 
             expect(cardsOnTargetDate).toEqual(expect.arrayContaining([
