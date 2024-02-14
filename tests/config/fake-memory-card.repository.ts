@@ -1,6 +1,5 @@
 import {Card} from "../../src/domains/cards/card.model";
 import {CardRepository} from "../../src/domains/cards/card.repository";
-import {Category} from "../../src/domains/cards/category";
 import {CardId} from "../../src/domains/cards/card-id";
 
 
@@ -9,9 +8,6 @@ const _cards: Card[] = []
 export class FakeMemoryCardRepository implements CardRepository {
     //init
     constructor() {
-        _cards.filter(card => card.id.value === "");
-        const newCard = new Card("question", "answer", Category.FIRST, "tag");
-        _cards.push(newCard);
     }
 
     async create(card: Card): Promise<Card> {

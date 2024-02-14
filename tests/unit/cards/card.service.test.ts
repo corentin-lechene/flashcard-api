@@ -16,6 +16,7 @@ describe('CardService', function () {
 
     describe('fetch cards', () => {
         it('should return all cards ', async () => {
+            await cardService.create("question", "answer", "tag");
             const cardsMatchingTags = await cardService.fetchAll();
             expect(cardsMatchingTags.length).toEqual(1);
         });
