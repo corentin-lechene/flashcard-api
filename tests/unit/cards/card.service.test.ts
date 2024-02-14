@@ -5,6 +5,7 @@ import {Category} from "../../../src/domains/cards/category";
 import {CardException} from "../../../src/domains/cards/card.exception";
 import {CardMessagesError} from "../../../src/domains/cards/card.message-error";
 import {FakeMemoryCardRepository} from "../../config/fake-memory-card.repository";
+import dayjs from "../../../config/dayjs.config";
 
 describe('CardService', function () {
     let cardService: CardService;
@@ -123,11 +124,74 @@ describe('CardService', function () {
             expect(expectedCard.category).toBe(Category.FIRST);
         });
     });
+
+    describe('fetchCardsBySpecificDate', () => {
+        it('should return only the cards whose review date matches the specific date', async () => {
+            const card1 = await cardService.create("question", "answer", "tag");
+            const card2 = await cardService.create("question", "answer", "tag");
+            const card3 = await cardService.create("question", "answer", "tag");
+
+            card2.category = Category.SECOND;
+
+            const targetDate = dayjs().add(2, 'day').toDate();
+
+            const cardsOnTargetDate = await cardService.fetchCardsBySpecificDate(targetDate);
+
+            expect(cardsOnTargetDate).toEqual(expect.arrayContaining([
+                expect.objectContaining({
+                    question: card2.question,
+                    answer: card2.answer,
+                    tag: card2.tag,
+                    category: card2.category
+                })
+            ]));
+
+            expect(cardsOnTargetDate).not.toEqual(expect.arrayContaining([
+                expect.objectContaining({
+                    question: card1.question,
+                    answer: card1.answer,
+                    tag: card1.tag,
+                    category: card1.category
+                }),
+                expect.objectContaining({
+                    question: card3.question,
+                    answer: card3.answer,
+                    tag: card3.tag,
+                    category: card3.category
+                })
+            ]));
+        });
+        it('should return cards whose review date is today', async () => {
+            const card1 = await cardService.create("question", "answer", "tag");
+
+            const targetDate = dayjs().toDate();
+            const cardsOnTargetDate = await cardService.fetchCardsBySpecificDate(targetDate);
+
+            expect(cardsOnTargetDate).toEqual(expect.arrayContaining([
+                expect.objectContaining({
+                    question: card1.question,
+                    answer: card1.answer,
+                    tag: card1.tag,
+                    category: card1.category
+                })
+            ]));
+        });
+        it('should not return cards in the DONE category regardless of the date', async () => {
+            const card1 = await cardService.create("question", "answer", "tag");
+
+            card1.category = Category.DONE;
+
+            const targetDate = dayjs().toDate();
+            const cardsOnTargetDate = await cardService.fetchCardsBySpecificDate(targetDate);
+
+            expect(cardsOnTargetDate).not.toEqual(expect.arrayContaining([
+                expect.objectContaining({
+                    question: card1.question,
+                    answer: card1.answer,
+                    tag: card1.tag,
+                    category: card1.category
+                })
+            ]));
+        });
+    });
 });
-
-
-
-
-
-
-

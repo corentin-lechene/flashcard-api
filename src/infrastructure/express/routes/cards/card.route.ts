@@ -10,7 +10,7 @@ export class CardRoute {
         router.get("/cards", await cardController.fetchCards());
         router.post("/cards", await cardController.addCard());
         router.patch("/cards/:cardId/answer", await cardController.answerCard());
-        // router.get("/cards/quizz", await cardController.getCardsByDate());
+        router.get("/cards/quizz", await cardController.getCardsByDate());
 
         return router;
     }

@@ -1,9 +1,10 @@
 import {Card} from "./card.model";
-import {Category} from "./category";
+import {Category, REVIEW_FREQUENCIES} from "./category";
 import {CardException} from "./card.exception";
 import {CardMessagesError} from "./card.message-error";
 import {CardId} from "./card-id";
 import {CardRepository} from "./card.repository";
+import dayjs from "../../../config/dayjs.config";
 
 
 export class CardService {
@@ -44,6 +45,26 @@ export class CardService {
         return this.cardRepository.create(newCard);
     }
 
+    async fetchCardsBySpecificDate(targetDate: Date): Promise<Card[]> {
+        const cards = await this.fetchAll();
+
+        return cards.filter(card => {
+            if (card.category === Category.DONE) {
+                return false;
+            }
+            const daysToReview = this.getDaysToReview(card.category);
+            const reviewDate = dayjs().startOf('day').add(daysToReview, 'day');
+            return reviewDate.isSame(dayjs(targetDate).startOf('day'), 'day');
+        });
+    }
+
+    getDaysToReview(category: Category): number {
+        if (category === Category.FIRST) {
+            return 0;
+        } else {
+            return REVIEW_FREQUENCIES[category] ?? 0;
+        }
+    }
 
     nextCategory(currentCategory: Category): Category { //fixme à déplacer ??
         const categories = Object.values(Category);
