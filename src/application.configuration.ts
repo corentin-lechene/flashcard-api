@@ -1,6 +1,5 @@
-// injection de dependence
-import {InMemoryCardRepository} from "./infrastructure/repositories/in-memory-card.repository";
-import {CardServiceImpl} from "./application/services/card.service.impl";
+import {InMemoryCardRepository} from "./infrastructure/repositories/in-memory/in-memory-card.repository";
+import {CardService} from "./domains/cards/card.service";
 
-export const cardRepository = new InMemoryCardRepository()
-export const cardService = new CardServiceImpl(cardRepository);
+export const cardRepository = new InMemoryCardRepository();
+export const cardService = new CardService(cardRepository);

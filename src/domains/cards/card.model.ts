@@ -1,6 +1,9 @@
-import {CardId, Category, generateCardId} from "./index";
+import {CardId} from "./card-id";
+import {Category} from "./category";
+
 
 export class Card {
+
     readonly id: CardId;
     category: Category
     question: string;
@@ -8,10 +11,10 @@ export class Card {
     tag: string;
 
     constructor(question: string, answer: string, category: Category, tag: string) {
-        this.id = generateCardId();
+        this.id = new CardId();
         this.category = category;
         this.question = question;
         this.answer = answer;
-        this.tag = tag.toLowerCase()
+        this.tag = tag;
     }
 }

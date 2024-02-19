@@ -1,12 +1,9 @@
 import * as express from "express";
 import * as cors from 'cors';
 import * as dotenv from "dotenv";
-
-import {loggingMiddleware, undefinedMiddleware} from "./middlewares/logging.middleware";
-
-import {cardService} from "../../application.configuration"; //fixme
-import {checkCardBody} from "./middlewares/card.middleware"; // fixme
-import {CardController} from "./controllers/card.controller"; //fixme
+import {CardRoute} from "./routes";
+import {loggerMiddleware} from "./middlewares/logger.middleware";
+import {unknownRouteMiddleware} from "./middlewares/unknown-route.middleware";
 
 dotenv.config();
 
@@ -20,22 +17,19 @@ export async function start_express() {
     app.use(express.json());
 
     // logs
-    app.use(loggingMiddleware());
+    app.use(loggerMiddleware());
 
     // test
     app.get("/ping", (_, res) => res.send("pong"));
 
     // all routes
-    const cardController = new CardController(cardService);
-    app.get("/cards", await cardController.fetchCards());
-    app.post("/cards", checkCardBody(), await cardController.addCard());
-    app.patch("/cards/:cardId/answer", await cardController.updateCardCategory());
-    app.get("/cards/quizz", await cardController.getCardsByDate());
+    app.use(await CardRoute.getRoutes());
+
 
     // populate for dev
 
     // undefined routes
-    app.use(undefinedMiddleware());
+    app.use(unknownRouteMiddleware());
 
     app.listen(PORT, async () => {
         console.log(`Server started on http://localhost:${PORT}/`);

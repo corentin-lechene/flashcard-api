@@ -2,7 +2,7 @@ import {Request, RequestHandler, Response} from "express";
 import * as dayjs from "dayjs";
 import {ConsoleLogger, LoggerService} from "../../../common";
 
-export function loggingMiddleware(): RequestHandler {
+export function loggerMiddleware(): RequestHandler {
     return (req, res, next) => {
         const logger = new LoggerService(new ConsoleLogger());
 
@@ -18,7 +18,7 @@ export function loggingMiddleware(): RequestHandler {
     }
 }
 
-export function onFinishMiddleware(req: Request, res: Response) {
+function onFinishMiddleware(req: Request, res: Response) {
     const logger = new LoggerService(new ConsoleLogger());
     const time = dayjs().format("YYYY-MM-DD HH:mm:ss:SSS");
     const method = req.method;
@@ -29,12 +29,5 @@ export function onFinishMiddleware(req: Request, res: Response) {
         logger.error(logMessage);
     } else {
         logger.success(logMessage);
-    }
-}
-
-export function undefinedMiddleware(): RequestHandler {
-    return (_, res) => {
-        res.locals.routeNotExists = true;
-        res.status(404).end();
     }
 }
