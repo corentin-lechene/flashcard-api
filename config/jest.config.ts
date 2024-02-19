@@ -12,5 +12,9 @@ module.exports = {
         'jsx',
         'json',
         'node'
-    ]
+    ],
+    coveragePathIgnorePatterns: [
+        "node_modules",
+        "<rootDir>/tests/config",
+    ],
 };

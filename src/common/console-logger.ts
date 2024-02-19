@@ -19,7 +19,7 @@ export class ConsoleLogger implements Logger {
     }
 
     warning(message: string) {
-        console.log(chalk.rgb(255,165,0)(message));
+        console.log(chalk.rgb(255, 165, 0)(message));
     }
 }
 

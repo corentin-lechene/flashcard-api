@@ -1,13 +1,17 @@
-import {Card} from "../../src/domains/cards/card.model";
-import {CardRepository} from "../../src/domains/cards/card.repository";
-import {CardId} from "../../src/domains/cards/card-id";
+import {Card} from "../../../domains/cards/card.model";
+import {CardRepository} from "../../../domains/cards/card.repository";
+import {Category} from "../../../domains/cards/category";
+import {CardId} from "../../../domains/cards/card-id";
 
 
 const _cards: Card[] = []
 
-export class FakeMemoryCardRepository implements CardRepository {
+export class InMemoryCardRepository implements CardRepository {
     //init
     constructor() {
+        _cards.filter(card => card.id.value === "");
+        const newCard = new Card("question", "answer", Category.FIRST, "tag");
+        _cards.push(newCard);
     }
 
     async create(card: Card): Promise<Card> {
