@@ -120,7 +120,7 @@ describe('CardService', function () {
             const card2 = await cardService.create("question", "answer", "tag");
             card2.answeredAt = dayjs().subtract(2, 'day').toDate();
 
-            card2.category = Category.SECOND;
+            await cardService.answer(card2.id, true);
 
             const targetDate = dayjs().toDate();
             const cardsOnTargetDate = await cardService.fetchCardsBySpecificDate(targetDate);
