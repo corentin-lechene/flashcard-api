@@ -4,7 +4,7 @@ import {CardException} from "./card.exception";
 import {CardMessagesError} from "./card.message-error";
 import {CardId} from "./card-id";
 import {CardRepository} from "./card.repository";
-import dayjs from "../../../config/dayjs.config"
+import dayjs from "../../../config/dayjs.config";
 
 
 export class CardService {
@@ -21,14 +21,7 @@ export class CardService {
     }
 
     async fetchById(cardId: CardId) {
-        if(!cardId) {
-            throw new CardException(CardMessagesError.CARD_ID_IS_REQUIRED);
-        }
-        try {
-            return this.cardRepository.fetchById(cardId);
-        } catch (error) {
-            throw new Error(); //fixme à demander
-        }
+        return this.cardRepository.fetchById(cardId);
     }
 
     async answer(cardId: CardId, isValid: boolean) {
@@ -38,13 +31,19 @@ export class CardService {
         } else {
             card.category = Category.FIRST;
         }
-        try {
-            return this.cardRepository.update(card);
-        } catch (error) {
-            throw new Error(); //fixme à demander
-        }
+
+        return this.cardRepository.update(card);
     }
 
+
+    async create(question: string, answer: string, tag: string): Promise<Card> {
+        if (!question?.trim() || !answer?.trim() || !tag?.trim()) {
+            throw new CardException(CardMessagesError.ALL_FIELDS_MUST_BE_FILL);
+        }
+
+        const newCard = new Card(question, answer, Category.FIRST, tag);
+        return this.cardRepository.create(newCard);
+    }
 
     async fetchCardsBySpecificDate(targetDate: Date): Promise<Card[]> {
         const cards = await this.fetchAll();
@@ -57,19 +56,6 @@ export class CardService {
             const theoreticalReviewDate = dayjs(card.answeredAt).add(daysToReview, 'day').startOf('day');
             return theoreticalReviewDate.isSame(dayjs(targetDate).startOf('day'), 'day');
         });
-    }
-
-    async create(question: string, answer: string, tag: string): Promise<Card> {
-        if (!question?.trim() || !answer?.trim() || !tag?.trim()) {
-            throw new CardException(CardMessagesError.ALL_FIELDS_MUST_BE_FILL);
-        }
-
-        const newCard = new Card(question, answer, Category.FIRST, tag);
-        try {
-            return this.cardRepository.create(newCard);
-        } catch (error) {
-            throw new Error(); //fixme à demander
-        }
     }
 
     getDaysToReview(category: Category): number {
