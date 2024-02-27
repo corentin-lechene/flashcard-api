@@ -41,7 +41,7 @@ export class CardService {
             throw new CardException(CardMessagesError.ALL_FIELDS_MUST_BE_FILL);
         }
 
-        const newCard = new Card(question, answer, Category.FIRST, tag);
+        const newCard = new Card(question.trim(), answer.trim(), Category.FIRST, tag.trim());
         return this.cardRepository.create(newCard);
     }
 

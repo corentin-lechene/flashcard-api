@@ -1,7 +1,7 @@
 import {beforeEach, describe, expect, it} from '@jest/globals';
 import {CardService} from "../../../src/domains/cards/card.service";
 import {Card} from "../../../src/domains/cards/card.model";
-import {Category, REVIEW_FREQUENCIES} from "../../../src/domains/cards/category";
+import {Category} from "../../../src/domains/cards/category";
 import {CardException} from "../../../src/domains/cards/card.exception";
 import {CardMessagesError} from "../../../src/domains/cards/card.message-error";
 import {FakeMemoryCardRepository} from "../../config/fake-memory-card.repository";
@@ -24,10 +24,13 @@ describe('CardService', function () {
 
         it('should throw an error if one field is null or undefined', async () => {
             await Promise.all([
-                ["question", "answer", " "],
-                ["question", " ", "tag"],
-                [" ", "answer", "tag"],
-                [" ", " ", ""],
+                ["question", "", ""],
+                ["question", "answer", ""],
+                ["question", "", "tag"],
+                ["", "answer", ""],
+                ["", "answer", "tag"],
+                ["", "", "tag"],
+                ["", "", ""]
             ].map(async ([question, answer, tag]) => {
                 await expect(async () => await cardService.create(question, answer, tag))
                     .rejects.toThrowError(new CardException(CardMessagesError.ALL_FIELDS_MUST_BE_FILL));
