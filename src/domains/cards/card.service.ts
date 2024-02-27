@@ -11,7 +11,7 @@ export class CardService {
     constructor(private cardRepository: CardRepository) {
         this.cardRepository = cardRepository;
     }
-    
+
     async fetchAll(): Promise<Card[]> {
         return this.cardRepository.fetchAll();
     }
@@ -47,14 +47,14 @@ export class CardService {
 
     async fetchCardsBySpecificDate(targetDate: Date): Promise<Card[]> {
         const cards = await this.fetchAll();
-
         return cards.filter(card => {
             if (card.category === Category.DONE) {
                 return false;
             }
-            const daysToReview = this.getDaysToReview(card.category);
-            const reviewDate = dayjs().startOf('day').add(daysToReview, 'day');
-            return reviewDate.isSame(dayjs(targetDate).startOf('day'), 'day');
+
+            const daysToReview = this.getDaysToReview(card.category)
+            const theoreticalReviewDate = dayjs(card.answeredAt).add(daysToReview, 'day').startOf('day');
+            return theoreticalReviewDate.isSame(dayjs(targetDate).startOf('day'), 'day');
         });
     }
 

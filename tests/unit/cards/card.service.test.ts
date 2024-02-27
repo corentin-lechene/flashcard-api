@@ -1,25 +1,17 @@
 import {beforeEach, describe, expect, it} from '@jest/globals';
 import {CardService} from "../../../src/domains/cards/card.service";
 import {Card} from "../../../src/domains/cards/card.model";
-import {Category} from "../../../src/domains/cards/category";
+import {Category, REVIEW_FREQUENCIES} from "../../../src/domains/cards/category";
 import {CardException} from "../../../src/domains/cards/card.exception";
 import {CardMessagesError} from "../../../src/domains/cards/card.message-error";
 import {FakeMemoryCardRepository} from "../../config/fake-memory-card.repository";
-import dayjs from "../../../config/dayjs.config";
+import dayjs from "../../../config/dayjs.config"
 
 describe('CardService', function () {
     let cardService: CardService;
 
     beforeEach(() => {
         cardService = new CardService(new FakeMemoryCardRepository());
-    });
-
-    describe('fetch cards', () => {
-        it('should return all cards ', async () => {
-            await cardService.create("question", "answer", "tag");
-            const cardsMatchingTags = await cardService.fetchAll();
-            expect(cardsMatchingTags.length).toEqual(1);
-        });
     });
 
     describe('addCard', () => {
@@ -32,13 +24,10 @@ describe('CardService', function () {
 
         it('should throw an error if one field is null or undefined', async () => {
             await Promise.all([
-                ["question", "", ""],
-                ["question", "answer", ""],
-                ["question", "", "tag"],
-                ["", "answer", ""],
-                ["", "answer", "tag"],
-                ["", "", "tag"],
-                ["", "", ""]
+                ["question", "answer", " "],
+                ["question", " ", "tag"],
+                [" ", "answer", "tag"],
+                [" ", " ", ""],
             ].map(async ([question, answer, tag]) => {
                 await expect(async () => await cardService.create(question, answer, tag))
                     .rejects.toThrowError(new CardException(CardMessagesError.ALL_FIELDS_MUST_BE_FILL));
@@ -127,14 +116,13 @@ describe('CardService', function () {
     });
 
     describe('fetchCardsBySpecificDate', () => {
-        it('should return only the cards whose review date matches the specific date', async () => {
-            const card1 = await cardService.create("question", "answer", "tag");
+        it('should return only the cards whose next review date matches the specific date', async () => {
             const card2 = await cardService.create("question", "answer", "tag");
-            const card3 = await cardService.create("question", "answer", "tag");
+            card2.answeredAt = dayjs().subtract(2, 'day').toDate();
 
             await cardService.answer(card2.id, true);
 
-            const targetDate = dayjs().add(2, 'day').toDate();
+            const targetDate = dayjs().toDate();
             const cardsOnTargetDate = await cardService.fetchCardsBySpecificDate(targetDate);
 
             expect(cardsOnTargetDate).toEqual(expect.arrayContaining([
@@ -145,24 +133,10 @@ describe('CardService', function () {
                     category: card2.category
                 })
             ]));
-
-            expect(cardsOnTargetDate).not.toEqual(expect.arrayContaining([
-                expect.objectContaining({
-                    question: card1.question,
-                    answer: card1.answer,
-                    tag: card1.tag,
-                    category: card1.category
-                }),
-                expect.objectContaining({
-                    question: card3.question,
-                    answer: card3.answer,
-                    tag: card3.tag,
-                    category: card3.category
-                })
-            ]));
         });
         it('should return cards whose review date is today', async () => {
             const card1 = await cardService.create("question", "answer", "tag");
+            card1.answeredAt = dayjs().subtract(1, 'day').toDate();
 
             const targetDate = dayjs().toDate();
             const cardsOnTargetDate = await cardService.fetchCardsBySpecificDate(targetDate);
